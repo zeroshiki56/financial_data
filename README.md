@@ -1,6 +1,6 @@
 financial_data
 ====
-a library of 
+a library of analyzing japanease stocks
 
 ## Description
 
