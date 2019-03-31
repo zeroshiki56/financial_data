@@ -1,9 +1,8 @@
 financial_data
 ====
-a library of analyzing japanease stocks
+a google app script library of analyzing japanease stocks
 
 ## Description
-
 
 ## Demo
 None.
