@@ -1,20 +1,20 @@
-function getHistoricalOhlcFromKabutan(code,startDay,endDay){
-  if(typeof(endDay) == "undefined") {
-    endDay = new Date();
+function getHistoricalOhlcFromKabutan(code,startDate,endDate){
+  if(typeof(endDate) == "undefined") {
+    endDate = new Date();
   }
-  if(typeof(startDay) == "undefined") {
-    startDay = new Date();
-    startDay.setMonth( startDay.getMonth() -12 );
+  if(typeof(startDate) == "undefined") {
+    startDate = new Date();
+    startDate.setMonth( startDate.getMonth() -12 );
   }
   var regOhlc = /<th scope="row"><time datetime="[\s\S]*?<\/time><\/th>\r\n<td>[\s\S]*?<\/td>\r\n<td>[\s\S]*?<\/td>\r\n<td>[\s\S]*?<\/td>\r\n<td>[\s\S]*?<\/td>/g;
   var regDate = /<time datetime="[\s\S]*?<\/time>/;
   const maxPageInKabutan = 10;
   var p = 1;
-  var tagElement = [];
-  var searchDay = endDay;
+  var ohlc = [];
+  var searchDate = endDate;
 
-  while ( searchDay.getTime() >= startDay.getTime() ){
-    var getUrl = 'https://kabutan.jp/stock/kabuka?code=' + code + '&ashi=day&page=' + p;
+  while ( searchDate.getTime() >= startDate.getTime() ){
+    var getUrl = 'https://kabutan.jp/stock/kabuka?code=' + code + '&ashi=Date&page=' + p;
     var response = UrlFetchApp.fetch(getUrl);
     var html = response.getContentText( 'UTF-8' );
     var stockRow = html.match( regOhlc );
@@ -24,19 +24,19 @@ function getHistoricalOhlcFromKabutan(code,startDay,endDay){
         .replace( '<time datetime="',"" )
         .replace( /">.*?<\/time>/g,"" )
         .replace( /-/g,"/" );
-      var rowDate = new Date(dateString);
-      if( searchDay.getTime() >= rowDate.getTime() ) {
+      var date = new Date(dateString);
+      if( searchDate.getTime() >= date.getTime() ) {
         var tdElements = stockRow[i].match( /<td>([\d|.|,]*?)<\/td>/g )
         for(var j=0 ; j < tdElements.length ; j++){
           tdElements[j] = tdElements[j]
           .replace( '<td>',"" )
           .replace( '<\/td>',"" );            
         }
-        tdElements.unshift ( Utilities.formatDate(rowDate, "JST", "yyyy/MM/dd") );
-        tagElement.push( tdElements );
-        searchDay = rowDate;
+        tdElements.unshift ( Utilities.formatDate(date, "JST", "yyyy/MM/dd") );
+        ohlc.push( tdElements );
+        searchDate = date;
       }
-      if ( searchDay.getTime() <= startDay.getTime() ) {
+      if ( searchDate.getTime() <= startDate.getTime() ) {
         break;
       }    
     }
@@ -46,15 +46,14 @@ function getHistoricalOhlcFromKabutan(code,startDay,endDay){
       break;
     }
   }
-  return tagElement;
+  return ohlc;
 }
 
-
 function isBusinessDay(date){
-  if (date.getDay() == 0 || date.getDay() == 6) {
+  if (date.getDate() == 0 || date.getDate() == 6) {
     return false;
   }
-  var calJa = CalendarApp.getCalendarById('ja.japanese#holiday@group.v.calendar.google.com');
+  var calJa = CalendarApp.getCalendarById('ja.japanese#holiDay@group.v.calendar.google.com');
   if(calJa.getEventsForDay(date).length > 0){
     return false;
   }
