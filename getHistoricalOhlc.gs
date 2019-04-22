@@ -30,7 +30,8 @@ function getHistoricalOhlcFromKabutan(code,startDate,endDate){
         for(var j=0 ; j < tdElements.length ; j++){
           tdElements[j] = tdElements[j]
           .replace( '<td>',"" )
-          .replace( '<\/td>',"" );            
+          .replace( '<\/td>',"" )
+          .replace( ',',"" ); 
         }
         tdElements.unshift ( Utilities.formatDate(date, "JST", "yyyy/MM/dd") );
         ohlc.push( tdElements );
@@ -47,35 +48,4 @@ function getHistoricalOhlcFromKabutan(code,startDate,endDate){
     }
   }
   return ohlc;
-}
-
-function isBusinessDay(date){
-  if (date.getDate() == 0 || date.getDate() == 6) {
-    return false;
-  }
-  var calJa = CalendarApp.getCalendarById('ja.japanese#holiDay@group.v.calendar.google.com');
-  if(calJa.getEventsForDay(date).length > 0){
-    return false;
-  }
-  return true;
-}
-
-function findCol(sheet,val,row){
-  var dat = sheet.getDataRange().getValues(); //受け取ったシートのデータを二次元配列に取得
-  for(var i=1;i<dat[0].length;i++){
-    if(dat[row-1][i-1] == val){
-      return i;
-    }
-  }
-  return 0;
-}
-
-function findRow(sheet,val,col){ 
-  var dat = sheet.getDataRange().getValues(); //受け取ったシートのデータを二次元配列に取得
-  for(var i=1;i<dat.length;i++){
-    if(dat[i-1][col-1] == val){
-      return i;
-    }
-  }
-  return 0;
 }
