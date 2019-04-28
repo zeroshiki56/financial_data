@@ -9,8 +9,8 @@ function stockAnalyze() {
       var code = getStockCode(sheet);
       var lastRow = sheet.getLastRow();
       var dateCol = findCol(sheet,'Date',1);
-      var dateCel = sheet.getRange(lastRow+1,dateCol);
-      if (　dateCel.isBlank() ){
+      var firstDateCel = sheet.getRange(lastRow,dateCol);
+      if (　firstDateCel.isBlank() ){
         var historicalOhlc = getHistoricalOhlcFromKabutan(code);
       }else{
         var historicalOhlc = getHistoricalOhlcFromKabutan(code,today,today);
