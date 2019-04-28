@@ -9,11 +9,14 @@ function stockAnalyze() {
       var code = getStockCode(sheet);
       var lastRow = sheet.getLastRow();
       var dateCol = findCol(sheet,'Date',1);
-      var firstDateCel = sheet.getRange(lastRow,dateCol);
-      if (　firstDateCel.isBlank() ){
+      var lastDateCel = sheet.getRange(lastRow,dateCol);
+      if (　lastDateCel.isBlank() ){
         var historicalOhlc = getHistoricalOhlcFromKabutan(code);
       }else{
-        var historicalOhlc = getHistoricalOhlcFromKabutan(code,today,today);
+        var lastDate = lastDateCel.getValue();
+        var startDate = new Date();
+        startDate.setDate( lastDate.getDate() + 1 );
+        var historicalOhlc = getHistoricalOhlcFromKabutan(code,lastDate,today);
       }
       var ohlcCel = sheet.getRange(lastRow+1,dateCol,historicalOhlc.length,historicalOhlc[0].length);
       ohlcCel.setValues(historicalOhlc.reverse());
