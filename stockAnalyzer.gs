@@ -16,7 +16,7 @@ function stockAnalyze() {
         var lastDate = lastDateCel.getValue();
         var startDate = new Date();
         startDate.setDate( lastDate.getDate() + 1 );
-        var historicalOhlc = getHistoricalOhlcFromKabutan(code,lastDate,today);
+        var historicalOhlc = getHistoricalOhlcFromKabutan(code,startDate,today);
       }
       var ohlcCel = sheet.getRange(lastRow+1,dateCol,historicalOhlc.length,historicalOhlc[0].length);
       ohlcCel.setValues(historicalOhlc.reverse());
