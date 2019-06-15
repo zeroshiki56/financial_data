@@ -14,8 +14,8 @@ function stockAnalyze() {
         var historicalOhlc = getHistoricalOhlcFromKabutan(code);
       }else{
         var lastDate = lastDateCel.getValue();
-        var startDate = new Date();
-        startDate.setDate( lastDate.getDate() + 1 );
+        var startDate = new Date(lastDate.getTime());
+        startDate.setDate( startDate.getDate() + 1 );
         var historicalOhlc = getHistoricalOhlcFromKabutan(code,startDate,today);
       }
       var ohlcCel = sheet.getRange(lastRow+1,dateCol,historicalOhlc.length,historicalOhlc[0].length);
