@@ -1,7 +1,8 @@
 function stockAnalyze() {
   
-  var today = new Date()
-  if (isBusinessDay(today)){
+  var date = new Date()
+  var today = new Date(date.getFullYear(),date.getMonth(),date.getDate())
+//  if (isBusinessDay(today)){
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheets = ss.getSheets();
     for ( var i = 0 ; i < sheets.length ; i++ ){
@@ -10,18 +11,21 @@ function stockAnalyze() {
       var lastRow = sheet.getLastRow();
       var dateCol = findCol(sheet,'Date',1);
       var lastDateCel = sheet.getRange(lastRow,dateCol);
-      if (　lastDateCel.isBlank() ){
+      var lastDateCelValue = lastDateCel.getValue();
+      if ( lastDateCelValue == 'Date' ){
         var historicalOhlc = getHistoricalOhlcFromKabutan(code);
       }else{
-        var lastDate = lastDateCel.getValue();
-        var startDate = new Date(lastDate.getTime());
+        var startDate = new Date(lastDateCelValue.getTime());
         startDate.setDate( startDate.getDate() + 1 );
         var historicalOhlc = getHistoricalOhlcFromKabutan(code,startDate,today);
       }
-      var ohlcCel = sheet.getRange(lastRow+1,dateCol,historicalOhlc.length,historicalOhlc[0].length);
-      ohlcCel.setValues(historicalOhlc.reverse());
+      
+      if ( historicalOhlc.length != 0 ){
+        var ohlcCel = sheet.getRange(lastRow+1,dateCol,historicalOhlc.length,historicalOhlc[0].length);
+        ohlcCel.setValues(historicalOhlc.reverse());
+      }
     }
-  }
+//  }
 }
 
 function getStockCode(sheet) {
