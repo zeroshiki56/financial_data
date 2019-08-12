@@ -23,9 +23,12 @@ function getHistoricalOhlcFromKabutan(code,startDate,endDate){
   const maxPageInKabutan = 10;
   var page = 1;
   var ohlc = [];
-  var searchDate = endDate;
+  var lastSearchDate = endDate;
   
-  while ( searchDate.getTime() > startDate.getTime() ){
+  while ( 
+     lastSearchDate.getTime() > startDate.getTime()　
+  && page < maxPageInKabutan
+  ){
     var getUrl = 'https://kabutan.jp/stock/kabuka?code=' + code + '&ashi=Date&page=' + page;
     var response = UrlFetchApp.fetch(getUrl);
     var html = response.getContentText( 'UTF-8' );
@@ -42,7 +45,7 @@ function getHistoricalOhlcFromKabutan(code,startDate,endDate){
         break;
       }    
 
-      if ( date.getTime() > searchDate.getTime() ) {
+      if ( date.getTime() > lastSearchDate.getTime() ) {
         continue;
       }    
       
@@ -55,13 +58,9 @@ function getHistoricalOhlcFromKabutan(code,startDate,endDate){
       }
       tdElements.unshift ( Utilities.formatDate(date, "JST", "yyyy/MM/dd") );
       ohlc.push( tdElements );
-      searchDate = date;
+      lastSearchDate = date;
     }
-    if ( page < maxPageInKabutan ) {
-      page++;
-    } else {
-      break;
-    }
+    page++;
   }
-  return ohlc;
+  return ohlc.reverse();
 }

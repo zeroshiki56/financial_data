@@ -22,7 +22,7 @@ function stockAnalyze() {
       
       if ( historicalOhlc.length != 0 ){
         var ohlcCel = sheet.getRange(lastRow+1,dateCol,historicalOhlc.length,historicalOhlc[0].length);
-        ohlcCel.setValues(historicalOhlc.reverse());
+        ohlcCel.setValues(historicalOhlc);
       }
     }
 //  }
