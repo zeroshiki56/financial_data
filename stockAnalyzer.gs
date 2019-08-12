@@ -2,7 +2,7 @@ function stockAnalyze() {
   
   var date = new Date()
   var today = new Date(date.getFullYear(),date.getMonth(),date.getDate())
-//  if (isBusinessDay(today)){
+  if (isBusinessDay(today)){
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheets = ss.getSheets();
     for ( var i = 0 ; i < sheets.length ; i++ ){
@@ -25,7 +25,7 @@ function stockAnalyze() {
         ohlcCel.setValues(historicalOhlc);
       }
     }
-//  }
+  }
 }
 
 function getStockCode(sheet) {
